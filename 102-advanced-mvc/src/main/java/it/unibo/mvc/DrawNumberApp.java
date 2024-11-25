@@ -31,7 +31,7 @@ public final class DrawNumberApp implements DrawNumberViewObserver {
         final Configuration.Builder configBuilder = new Configuration.Builder();
         try (final BufferedReader br = new BufferedReader(new InputStreamReader(ClassLoader.getSystemResourceAsStream(config)))) {
             for(String line = br.readLine(); line != null; line = br.readLine()) {
-                StringTokenizer st = new StringTokenizer(line, ": ");
+                StringTokenizer st = new StringTokenizer(line, ":");
                 switch (st.nextToken()) {
                     case "minimum":
                         configBuilder.setMin(Integer.parseInt(st.nextToken().trim()));
@@ -89,7 +89,12 @@ public final class DrawNumberApp implements DrawNumberViewObserver {
      * @throws FileNotFoundException 
      */
     public static void main(final String... args) throws FileNotFoundException {
-        new DrawNumberApp("config.yml", new DrawNumberViewImpl());
+        new DrawNumberApp("config.yml", 
+            new DrawNumberViewImpl(),
+            new DrawNumberViewImpl(),
+            new PrintStreamView(System.out),
+            new PrintStreamView("out.log")
+        );
     }
 
 }
