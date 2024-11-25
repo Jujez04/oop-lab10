@@ -1,5 +1,11 @@
 package it.unibo.mvc;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 /**
  * Encapsulates the concept of configuration.
@@ -63,9 +69,12 @@ public final class Configuration {
      */
     public static class Builder {
 
+        private static final String SEP = File.separator;
         private static final int MIN = 0;
         private static final int MAX = 100;
         private static final int ATTEMPTS = 10;
+        private static final String CONFIG_FILE_YML =  "src" + SEP + "main" + SEP + "resources" + SEP + "config.yml";
+        private static final File FILE_CONFIG = new File(CONFIG_FILE_YML);
 
         private int min = MIN;
         private int max = MAX;
@@ -108,6 +117,12 @@ public final class Configuration {
             }
             consumed = true;
             return new Configuration(max, min, attempts);
+        }
+
+        private final void configurateUsingYML() throws IOException  {
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(FILE_CONFIG))) ) {
+                
+            } 
         }
     }
 }
