@@ -60,7 +60,7 @@ public final class PrintStreamView implements DrawNumberView {
 
     @Override
     public void displayError(String message) {
-       throw new UnsupportedOperationException();
+       System.err.println(message);
     }
 
 }
