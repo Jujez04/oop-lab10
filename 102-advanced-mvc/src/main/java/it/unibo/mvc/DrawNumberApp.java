@@ -50,6 +50,9 @@ public final class DrawNumberApp implements DrawNumberViewObserver {
             System.err.println("File corrupted " + e.getMessage());
         }
         final Configuration configuration = configBuilder.build();
+        if(!configuration.isConsistent()) {
+            throw new IllegalStateException();
+        }
         this.model = new DrawNumberImpl(configuration.getMin(), configuration.getMax(), configuration.getAttempts());
     }
 
