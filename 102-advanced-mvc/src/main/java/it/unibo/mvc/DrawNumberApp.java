@@ -6,13 +6,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.List;
+import java.util.StringTokenizer;
 
 /**
  */
 public final class DrawNumberApp implements DrawNumberViewObserver {
-    private static final int MIN = 0;
-    private static final int MAX = 100;
-    private static final int ATTEMPTS = 10;
 
     private final DrawNumber model;
     private final List<DrawNumberView> views;
@@ -30,12 +28,29 @@ public final class DrawNumberApp implements DrawNumberViewObserver {
             view.setObserver(this);
             view.start();
         }
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(ClassLoader.getSystemResourceAsStream(config)))) {
-            
-        } catch (IOException e) {
-            System.err.println("File not found");
+        final Configuration.Builder configBuilder = new Configuration.Builder();
+        try (final BufferedReader br = new BufferedReader(new InputStreamReader(ClassLoader.getSystemResourceAsStream(config)))) {
+            for(String line = br.readLine(); line != null; line = br.readLine()) {
+                StringTokenizer st = new StringTokenizer(line, ": ");
+                switch (st.nextToken()) {
+                    case "minimum":
+                        configBuilder.setMin(Integer.parseInt(st.nextToken().trim()));
+                        break;
+                    case "maximum":
+                        configBuilder.setMax(Integer.parseInt(st.nextToken().trim()));
+                        break;
+                    case "attempts":
+                        configBuilder.setAttempts(Integer.parseInt(st.nextToken().trim()));
+                        break;
+                    default :
+                        throw new IllegalArgumentException();
+                }
+            }
+        } catch (final IOException e) {
+            System.err.println("File corrupted " + e.getMessage());
         }
-        this.model = new DrawNumberImpl(MIN, MAX, ATTEMPTS);
+        final Configuration configuration = configBuilder.build();
+        this.model = new DrawNumberImpl(configuration.getMin(), configuration.getMax(), configuration.getAttempts());
     }
 
     @Override
